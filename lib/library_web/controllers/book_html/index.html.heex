@@ -1,0 +1,29 @@
+<.header>
+  Listing Books
+  <:actions>
+    <.link href={~p"/books/new"}>
+      <.button>New Book</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="books" rows={@books} row_click={&JS.navigate(~p"/books/#{&1}")}>
+  <:col :let={book} label="Title"><%= book.title %></:col>
+  <:col :let={book} label="Published date"><%= book.published_date %></:col>
+  <:col :let={book} label="Isbn"><%= book.isbn %></:col>
+  <:col :let={book} label="Author"><%= book.author %></:col>
+  <:col :let={book} label="Cover image url"><%= book.cover_image_url %></:col>
+  <:col :let={book} label="Initial stock"><%= book.initial_stock %></:col>
+  <:col :let={book} label="Count checked out"><%= book.count_checked_out %></:col>
+  <:action :let={book}>
+    <div class="sr-only">
+      <.link navigate={~p"/books/#{book}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/books/#{book}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={book}>
+    <.link href={~p"/books/#{book}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
