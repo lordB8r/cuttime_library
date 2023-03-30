@@ -14,9 +14,9 @@ defmodule Library.CatalogueFixtures do
         author: "some author",
         count_checked_out: 42,
         cover_image_url: "some cover_image_url",
-        initial_stock: 42,
+        stock: 42,
         isbn: "some isbn",
-        published_date: ~D[2023-03-28],
+        published_on: ~D[2023-03-28],
         title: "some title"
       })
       |> Library.Catalogue.create_book()

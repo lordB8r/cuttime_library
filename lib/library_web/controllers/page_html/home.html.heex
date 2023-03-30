@@ -1,4 +1,14 @@
 <.flash_group flash={@flash} />
 <div>
   <h1>Welcome to the CutTime Library Project</h1>
+  <br />
+  <p>For books listing, please click <.link href={~p"/books"}>here</.link></p>
+  <br />
+  <p>For registered members, please click <.link href={~p"/"}>here</.link></p>
+  <.link href={~p"/"}>
+    <.button>Checkout Books</.button>
+  </.link>
+  <.link href={~p"/"}>
+    <.button>Return Books</.button>
+  </.link>
 </div>

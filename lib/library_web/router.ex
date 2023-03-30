@@ -1,5 +1,4 @@
 defmodule LibraryWeb.Router do
-  alias LibraryWeb.BookController
   use LibraryWeb, :router
 
   pipeline :browser do
@@ -20,7 +19,10 @@ defmodule LibraryWeb.Router do
 
     get "/", PageController, :home
     resources "/books", BookController
-    post "/books-import", BookController, :import
+    get "/books-import", BookController, :new_import
+    post "/books-import", BookController, :import_books
+
+    live "/upload_live", UploadLive
   end
 
   # Other scopes may use custom stacks.

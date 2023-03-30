@@ -1,8 +1,10 @@
 defmodule LibraryWeb.BookController do
   use LibraryWeb, :controller
 
+  alias Library.Utility
   alias Library.Catalogue
   alias Library.Catalogue.Book
+  alias Utility
 
   def index(conn, _params) do
     books = Catalogue.list_books()
@@ -58,5 +60,27 @@ defmodule LibraryWeb.BookController do
     conn
     |> put_flash(:info, "Book deleted successfully.")
     |> redirect(to: ~p"/books")
+  end
+
+  def new_import(conn, _) do
+    render(conn, :new_import)
+  end
+
+  def import_books(conn, %{"csv" => csv}) do
+    Utility.csv_decoder(csv)
+    |> import_book_list()
+
+    conn
+    |> put_flash(:info, "Books imported successfully!")
+    |> redirect(to: ~p"/books")
+  end
+
+  defp import_book_list(data) do
+    {:ok, _} =
+      data
+      |> Enum.map(fn {:ok, book} -> book end)
+      |> Catalogue.convert_params()
+
+    # |> Book.insert_book
   end
 end
