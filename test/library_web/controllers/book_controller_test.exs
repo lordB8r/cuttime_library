@@ -3,9 +3,33 @@ defmodule LibraryWeb.BookControllerTest do
 
   import Library.CatalogueFixtures
 
-  @create_attrs %{author: "some author", count_checked_out: 42, cover_image_url: "some cover_image_url", initial_stock: 42, isbn: "some isbn", published_date: ~D[2023-03-28], title: "some title"}
-  @update_attrs %{author: "some updated author", count_checked_out: 43, cover_image_url: "some updated cover_image_url", initial_stock: 43, isbn: "some updated isbn", published_date: ~D[2023-03-29], title: "some updated title"}
-  @invalid_attrs %{author: nil, count_checked_out: nil, cover_image_url: nil, initial_stock: nil, isbn: nil, published_date: nil, title: nil}
+  @create_attrs %{
+    author: "some author",
+    count_checked_out: 42,
+    cover_image_url: "some cover_image_url",
+    stock: 42,
+    isbn: "some isbn",
+    published_on: ~D[2023-03-28],
+    title: "some title"
+  }
+  @update_attrs %{
+    author: "some updated author",
+    count_checked_out: 43,
+    cover_image_url: "some updated cover_image_url",
+    stock: 43,
+    isbn: "some updated isbn",
+    published_on: ~D[2023-03-29],
+    title: "some updated title"
+  }
+  @invalid_attrs %{
+    author: nil,
+    count_checked_out: nil,
+    cover_image_url: nil,
+    stock: nil,
+    isbn: nil,
+    published_on: nil,
+    title: nil
+  }
 
   describe "index" do
     test "lists all books", %{conn: conn} do
@@ -29,7 +53,7 @@ defmodule LibraryWeb.BookControllerTest do
       assert redirected_to(conn) == ~p"/books/#{id}"
 
       conn = get(conn, ~p"/books/#{id}")
-      assert html_response(conn, 200) =~ "Book #{id}"
+      assert html_response(conn, 200) =~ "Book some title"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

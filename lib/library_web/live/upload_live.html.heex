@@ -1,0 +1,12 @@
+<h2>Upload your book inventory list here!</h2>
+<.form for={@uploaded_files} phx-change="validate" phx-submit="save">
+  <div class="container" phx-drop-target={@uploads.csv.ref}>
+    <.live_file_input upload={@uploads.csv} />
+    <.button type="submit">Upload</.button>
+    <%= for error <- upload_errors(@uploads.csv) do %>
+      <div class="alert alert-danger">
+        <%= error_to_string(error) %>
+      </div>
+    <% end %>
+  </div>
+</.form>
