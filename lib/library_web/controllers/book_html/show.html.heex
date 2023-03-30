@@ -10,11 +10,11 @@
 Book Cover: <img src={@book.cover_image_url} />
 
 <.list>
-  <:item title="Published date"><%= @book.published_date %></:item>
+  <:item title="Published date"><%= @book.published_on %></:item>
   <:item title="ISBN"><%= @book.isbn %></:item>
   <:item title="Author"><%= @book.author %></:item>
   <:item title="Cover image url"><%= @book.cover_image_url %></:item>
-  <:item title="Initial stock"><%= @book.initial_stock %></:item>
+  <:item title="Initial stock"><%= @book.stock %></:item>
   <:item title="Currently checked out:"><%= @book.count_checked_out %></:item>
 </.list>
 

@@ -4,11 +4,11 @@ defmodule Library.Repo.Migrations.CreateBooks do
   def change do
     create table(:books) do
       add :title, :string
-      add :published_date, :date
+      add :published_on, :date
       add :isbn, :string
       add :author, :string
       add :cover_image_url, :string
-      add :initial_stock, :integer
+      add :stock, :integer
       add :count_checked_out, :integer
 
       timestamps()
