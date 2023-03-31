@@ -5,9 +5,6 @@ defmodule LibraryWeb.MemberController do
   alias Library.Accounts.Member
   alias Library.Catalogue
 
-  @duedate_limit 30
-  @duedate_type "days"
-
   def index(conn, _params) do
     members = Accounts.list_members()
     render(conn, :index, members: members, filter_overdue: false)
@@ -53,8 +50,7 @@ defmodule LibraryWeb.MemberController do
         }
       end)
 
-    has_overdues =
-      Accounts.has_overdue_books?(member) |> IO.inspect(label: "member_controller.ex:45")
+    has_overdues = Accounts.has_overdue_books?(member)
 
     render(conn, :show, member: member, checked_out: checked_out, has_overdues: has_overdues)
   end
