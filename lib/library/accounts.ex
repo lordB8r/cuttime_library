@@ -16,12 +16,18 @@ defmodule Library.Accounts do
 
   def list_members do
     Repo.all(Member)
+    |> Enum.map(fn member ->
+      member |> set_member_map()
+    end)
   end
 
   # consider creating a struct for the checked_out_books for struct safety
   def get_member!(id) do
-    member = Repo.get!(Member, id)
+    Repo.get!(Member, id)
+    |> set_member_map()
+  end
 
+  defp set_member_map(member) do
     changes =
       Enum.map(member.checked_out_books, fn x ->
         %{
@@ -88,8 +94,6 @@ defmodule Library.Accounts do
           })
           |> Ecto.Changeset.apply_action(:insert)
 
-        checked_out |> IO.inspect(label: "accounts.ex:91")
-
         update_member(member, %{checked_out_books: [checked_out | member.checked_out_books]})
 
       false ->
@@ -120,7 +124,6 @@ defmodule Library.Accounts do
     |> Enum.map(fn book ->
       is_over_due?(book)
     end)
-    |> IO.inspect(label: "accounts.ex:123")
     |> Enum.find_value(false, fn x -> x == true end)
   end
 

@@ -10,6 +10,15 @@
     <.link href={~p"/"}>
       <.button>Home</.button>
     </.link>
+    <%= if @filter_overdue do %>
+    <.link href={~p"/members"}>
+      <.button>Show all</.button>
+    </.link>
+    <% else %>
+    <.link href={~p"/show_overdue"}>
+      <.button>Overdue only</.button>
+    </.link>
+    <% end %>
   </:actions>
 </.header>
 <div>

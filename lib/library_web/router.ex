@@ -20,6 +20,7 @@ defmodule LibraryWeb.Router do
     get("/", PageController, :home)
     resources("/books", BookController)
     resources("/members", MemberController)
+    get("/show_overdue", MemberController, :overdue)
     post("/members/return/:member_id/:book_id", MemberController, :return)
     get("/members/checkout/:member_id", MemberController, :list_books)
     post("/members/checkout/:member_id/:book_id", MemberController, :checkout)

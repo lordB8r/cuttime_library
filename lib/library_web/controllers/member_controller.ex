@@ -10,7 +10,18 @@ defmodule LibraryWeb.MemberController do
 
   def index(conn, _params) do
     members = Accounts.list_members()
-    render(conn, :index, members: members)
+    render(conn, :index, members: members, filter_overdue: false)
+  end
+
+  def overdue(conn, _params) do
+    members = Accounts.list_members()
+
+    members =
+      Enum.reject(members, fn member ->
+        Accounts.has_overdue_books?(member) == false
+      end)
+
+    render(conn, :index, members: members, filter_overdue: true)
   end
 
   def new(conn, _params) do
