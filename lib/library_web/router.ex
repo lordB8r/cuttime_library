@@ -2,30 +2,36 @@ defmodule LibraryWeb.Router do
   use LibraryWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {LibraryWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {LibraryWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", LibraryWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", PageController, :home
-    resources "/books", BookController
-    resources "/members", MemberController
-    post "/members/return/:member_id/:book_id", MemberController, :return
-    get "/members/checkout/:member_id", MemberController, :list_books
-    post "/members/checkout/:member_id/:book_id", MemberController, :checkout
+    get("/", PageController, :home)
+    resources("/books", BookController)
+    resources("/members", MemberController)
+    post("/members/return/:member_id/:book_id", MemberController, :return)
+    get("/members/checkout/:member_id", MemberController, :list_books)
+    post("/members/checkout/:member_id/:book_id", MemberController, :checkout)
 
-    live "/upload_live", UploadLive
-    live "/checkout_live", CheckoutLive
+    post(
+      "/members/checkout/:member_id/:book_id/:limit/:type",
+      MemberController,
+      :checkout_overdue
+    )
+
+    live("/upload_live", UploadLive)
+    live("/checkout_live", CheckoutLive)
   end
 
   # Other scopes may use custom stacks.
@@ -43,10 +49,10 @@ defmodule LibraryWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: LibraryWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: LibraryWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

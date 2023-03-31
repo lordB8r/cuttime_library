@@ -1,24 +1,23 @@
 defmodule LibraryWeb.MemberHTML do
+  alias Library.Accounts
+  alias Library.Catalogue
   use LibraryWeb, :html
 
-  embed_templates "member_html/*"
+  embed_templates("member_html/*")
 
   @doc """
   Renders a member form.
   """
-  attr :changeset, Ecto.Changeset, required: true
-  attr :action, :string, required: true
+  attr(:changeset, Ecto.Changeset, required: true)
+  attr(:action, :string, required: true)
 
   def member_form(assigns)
 
   def due_date(book) do
-    {:ok, dt, _} = DateTime.from_iso8601(book.checked_out_at)
-    type = String.to_existing_atom(book.type)
+    Accounts.due_date(book)
+  end
 
-    DateTime.add(
-      dt,
-      book.limit,
-      type
-    )
+  def show_available(book) do
+    Catalogue.available_stock(book)
   end
 end

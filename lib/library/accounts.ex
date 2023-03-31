@@ -12,7 +12,7 @@ defmodule Library.Accounts do
 
   @book_checkout_limit 3
   @overdue_limit 30
-  @overdue_type :day
+  @overdue_type "day"
 
   def list_members do
     Repo.all(Member)
@@ -73,7 +73,7 @@ defmodule Library.Accounts do
     |> allowed_to_check_out?()
   end
 
-  def checkout_book(%Member{} = member, book_id) do
+  def checkout_book(%Member{} = member, book_id, limit \\ @overdue_limit, type \\ @overdue_type) do
     case allowed_to_check_out?(member) && Catalogue.available_for_checkout?(book_id) do
       true ->
         {:ok, _book} = Catalogue.checkout_book(book_id)
@@ -83,10 +83,12 @@ defmodule Library.Accounts do
           |> CheckOut.changeset(%{
             book_id: book_id,
             checked_out_at: DateTime.now!("Etc/UTC"),
-            limit: @overdue_limit,
-            type: @overdue_type
+            limit: limit,
+            type: type
           })
           |> Ecto.Changeset.apply_action(:insert)
+
+        checked_out |> IO.inspect(label: "accounts.ex:91")
 
         update_member(member, %{checked_out_books: [checked_out | member.checked_out_books]})
 
@@ -111,5 +113,47 @@ defmodule Library.Accounts do
 
   def get_list_checked_out_books(%Member{} = member) do
     member.checked_out_books
+  end
+
+  def has_overdue_books?(%Member{} = member) do
+    member.checked_out_books
+    |> Enum.map(fn book ->
+      is_over_due?(book)
+    end)
+    |> IO.inspect(label: "accounts.ex:123")
+    |> Enum.find_value(false, fn x -> x == true end)
+  end
+
+  def due_date(book) do
+    prep_due_date(book)
+    |> DateTime.to_date()
+  end
+
+  defp prep_due_date(book) do
+    type = String.to_existing_atom(book.type)
+
+    DateTime.add(
+      process_datetime(book.checked_out_at),
+      book.limit,
+      type
+    )
+  end
+
+  def is_over_due?(book) do
+    due = prep_due_date(book) |> IO.inspect(label: "due: accounts.ex:138")
+    {:ok, now} = DateTime.now("Etc/UTC")
+    now |> IO.inspect(label: "now: accounts.ex:140")
+
+    DateTime.diff(due, now) |> IO.inspect(label: "diff: accounts.ex:142")
+
+    case DateTime.diff(due, now) do
+      x when x > 0 -> false
+      x when x <= 0 -> true
+    end
+  end
+
+  defp process_datetime(checked_out_at) do
+    {:ok, dt, _} = DateTime.from_iso8601(checked_out_at)
+    dt
   end
 end

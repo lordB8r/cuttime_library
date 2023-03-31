@@ -5,9 +5,17 @@
 
 <.table id="for_check_out" rows={@books}>
   <:col :let={book} label="Title"><%= book.title %></:col>
+  <:col :let={book} label="Available"><%= show_available(book) %></:col>
   <:action :let={book}>
     <.link href={~p"/members/checkout/#{@member.id}/#{book.id}"} method="post">
-      Checkout
+      <.button>
+        Checkout
+      </.button>
+    </.link>
+    <.link href={~p"/members/checkout/#{@member.id}/#{book.id}/0/second"} method="post">
+      <.button>
+        Overdue Checkout
+      </.button>
     </.link>
   </:action>
 </.table>

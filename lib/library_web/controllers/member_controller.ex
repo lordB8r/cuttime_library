@@ -42,7 +42,10 @@ defmodule LibraryWeb.MemberController do
         }
       end)
 
-    render(conn, :show, member: member, checked_out: checked_out)
+    has_overdues =
+      Accounts.has_overdue_books?(member) |> IO.inspect(label: "member_controller.ex:45")
+
+    render(conn, :show, member: member, checked_out: checked_out, has_overdues: has_overdues)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -88,6 +91,21 @@ defmodule LibraryWeb.MemberController do
     member = Accounts.get_member!(member_id)
 
     Accounts.checkout_book(member, book_id)
+
+    conn
+    |> put_flash(:info, "Book checked out successfully")
+    |> redirect(to: ~p"/members/#{member}")
+  end
+
+  def checkout_overdue(conn, %{
+        "member_id" => member_id,
+        "book_id" => book_id,
+        "type" => type,
+        "limit" => limit
+      }) do
+    member = Accounts.get_member!(member_id)
+
+    Accounts.checkout_book(member, book_id, limit, type)
 
     conn
     |> put_flash(:info, "Book checked out successfully")
