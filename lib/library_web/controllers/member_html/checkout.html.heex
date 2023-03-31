@@ -1,0 +1,23 @@
+<.header>
+  Checkout for <%= @member.first_name %> <%= @member.last_name %>
+  <:subtitle>Use this page to checkout a book from the catalogue.</:subtitle>
+</.header>
+
+<.table id="for_check_out" rows={@books}>
+  <:col :let={book} label="Title"><%= book.title %></:col>
+  <:col :let={book} label="Available"><%= show_available(book) %></:col>
+  <:action :let={book}>
+    <.link href={~p"/members/checkout/#{@member.id}/#{book.id}"} method="post">
+      <.button>
+        Checkout
+      </.button>
+    </.link>
+    <.link href={~p"/members/checkout/#{@member.id}/#{book.id}/0/second"} method="post">
+      <.button>
+        Overdue Checkout
+      </.button>
+    </.link>
+  </:action>
+</.table>
+
+<.back navigate={~p"/members/#{@member}"}>Back to member</.back>

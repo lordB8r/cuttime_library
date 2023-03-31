@@ -1,0 +1,37 @@
+<.header>
+  Member <%= @member.id %>
+  <:subtitle>This is a member record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/members/#{@member}/edit"}>
+      <.button>Edit member</.button>
+    </.link>
+    <.link href={~p"/members/checkout/#{@member}"}>
+      <.button>Checkout Books</.button>
+    </.link>
+  </:actions>
+</.header>
+
+  <%= if @has_overdues do %>
+<div>
+    YOU HAVE OVERDUE BOOKS
+</div>
+  <% end %>
+
+<.list>
+  <:item title="First name"><%= @member.first_name %></:item>
+  <:item title="Last name"><%= @member.last_name %></:item>
+</.list>
+
+<.table id="checked_out" rows={@checked_out}>
+  <:col :let={book} label="Title"><%= book.book.title %></:col>
+  <:col :let={book} label="Due date"><%= due_date(book.checked_out) %></:col>
+  <:action :let={book}>
+    <.link href={~p"/members/return/#{book.member_id}/#{book.book.id}"} method="post">
+      <.button>
+        Return
+      </.button>
+    </.link>
+  </:action>
+</.table>
+
+<.back navigate={~p"/members"}>Back to members</.back>
