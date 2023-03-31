@@ -35,7 +35,7 @@ defmodule Library.Catalogue do
   end
 
   def convert_params(data) do
-    data |> IO.inspect(label: "catalogue.ex:38")
+    data
   end
 
   def convert(data) do

@@ -19,8 +19,6 @@ defmodule LibraryWeb.Router do
 
     get "/", PageController, :home
     resources "/books", BookController
-    get "/books-import", BookController, :new_import
-    post "/books-import", BookController, :import_books
 
     live "/upload_live", UploadLive
   end
