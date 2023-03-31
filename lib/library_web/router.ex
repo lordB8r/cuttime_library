@@ -20,6 +20,8 @@ defmodule LibraryWeb.Router do
     get "/", PageController, :home
     resources "/books", BookController
     resources "/members", MemberController
+    post "/members/return/:member_id/:book_id", MemberController, :return
+
     live "/upload_live", UploadLive
     live "/checkout_live", CheckoutLive
   end

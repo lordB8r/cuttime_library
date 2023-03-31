@@ -91,5 +91,35 @@ defmodule Library.CatalogueTest do
       book = book_fixture()
       assert %Ecto.Changeset{} = Catalogue.change_book(book)
     end
+
+    test "book is available for checkout" do
+      book = book_available_fixture()
+
+      assert Catalogue.available_for_checkout?(book)
+    end
+
+    test "book is not available for checkout" do
+      book = book_fixture()
+
+      refute Catalogue.available_for_checkout?(book)
+    end
+
+    test "return book decreases available stock" do
+      book_to_return = book_fixture()
+      Catalogue.return_book(book_to_return)
+
+      returned_book = Catalogue.get_book!(book_to_return.id)
+
+      assert returned_book.count_checked_out == book_to_return.count_checked_out - 1
+    end
+
+    test "checkout book increases available stock" do
+      book_to_checkout = book_available_fixture()
+      Catalogue.checkout_book(book_to_checkout)
+
+      checked_out = Catalogue.get_book!(book_to_checkout.id)
+
+      assert checked_out.count_checked_out == book_to_checkout.count_checked_out + 1
+    end
   end
 end

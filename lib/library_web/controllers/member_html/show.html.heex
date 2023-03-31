@@ -16,4 +16,18 @@
   <:item title="Last name"><%= @member.last_name %></:item>
 </.list>
 
+<.table id="checked_out" rows={@checked_out}>
+  <:col :let={book} label="Title"><%= book.book.title %></:col>
+  <:col :let={book} label="Due date"><%= due_date(book.checked_out) %></:col>
+  <:action :let={book}>
+    <.link
+      href={~p"/members/return/#{book.member_id}/#{book.book.id}"}
+      method="post"
+      data-confirm="Are you sure?"
+    >
+      Return
+    </.link>
+  </:action>
+</.table>
+
 <.back navigate={~p"/members"}>Back to members</.back>

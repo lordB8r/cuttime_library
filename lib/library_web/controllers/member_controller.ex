@@ -3,6 +3,10 @@ defmodule LibraryWeb.MemberController do
 
   alias Library.Accounts
   alias Library.Accounts.Member
+  alias Library.Catalogue
+
+  @duedate_limit 30
+  @duedate_type "days"
 
   def index(conn, _params) do
     members = Accounts.list_members()
@@ -28,7 +32,17 @@ defmodule LibraryWeb.MemberController do
 
   def show(conn, %{"id" => id}) do
     member = Accounts.get_member!(id)
-    render(conn, :show, member: member)
+
+    checked_out =
+      Enum.map(member.checked_out_books, fn x ->
+        %{
+          book: Catalogue.get_book!(x.book_id),
+          checked_out: x,
+          member_id: member.id
+        }
+      end)
+
+    render(conn, :show, member: member, checked_out: checked_out)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -58,5 +72,16 @@ defmodule LibraryWeb.MemberController do
     conn
     |> put_flash(:info, "Member deleted successfully.")
     |> redirect(to: ~p"/members")
+  end
+
+  def return(conn, %{"member_id" => member_id, "book_id" => book_id}) do
+    member = Accounts.get_member!(member_id)
+
+    Accounts.return_book(member, book_id)
+    |> IO.inspect(label: "member_controller.ex:82")
+
+    conn
+    |> put_flash(:info, "Book returned successfully.")
+    |> redirect(to: ~p"/members/#{member}")
   end
 end

@@ -1,7 +1,15 @@
 defmodule Library.Accounts.CheckOut do
-  defstruct [:book_id, :checked_out_at]
-  @types %{book_id: :integer, checked_out_at: :date}
+  @derive Jason.Encoder
+  defstruct [:book_id, :checked_out_at, :limit, :type]
 
+  @types %{
+    book_id: :integer,
+    checked_out_at: :utc_datetime,
+    limit: :integer,
+    type: :any
+  }
+
+  # @limit_types [:second, :minute, :day]
   alias Library.Accounts.CheckOut
   import Ecto.Changeset
 

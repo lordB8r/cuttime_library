@@ -10,4 +10,15 @@ defmodule LibraryWeb.MemberHTML do
   attr :action, :string, required: true
 
   def member_form(assigns)
+
+  def due_date(book) do
+    {:ok, dt, _} = DateTime.from_iso8601(book.checked_out_at)
+    type = String.to_existing_atom(book.type)
+
+    DateTime.add(
+      dt,
+      book.limit,
+      type
+    )
+  end
 end
