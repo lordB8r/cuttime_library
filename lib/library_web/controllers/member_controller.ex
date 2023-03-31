@@ -78,10 +78,26 @@ defmodule LibraryWeb.MemberController do
     member = Accounts.get_member!(member_id)
 
     Accounts.return_book(member, book_id)
-    |> IO.inspect(label: "member_controller.ex:82")
 
     conn
     |> put_flash(:info, "Book returned successfully.")
     |> redirect(to: ~p"/members/#{member}")
+  end
+
+  def checkout(conn, %{"member_id" => member_id, "book_id" => book_id}) do
+    member = Accounts.get_member!(member_id)
+
+    Accounts.checkout_book(member, book_id)
+
+    conn
+    |> put_flash(:info, "Book checked out successfully")
+    |> redirect(to: ~p"/members/#{member}")
+  end
+
+  def list_books(conn, %{"member_id" => member_id}) do
+    member = Accounts.get_member!(member_id)
+    books = Catalogue.list_books()
+
+    render(conn, :checkout, member: member, books: books)
   end
 end

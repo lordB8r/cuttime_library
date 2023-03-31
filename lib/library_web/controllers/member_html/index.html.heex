@@ -4,8 +4,17 @@
     <.link href={~p"/members/new"}>
       <.button>New Member</.button>
     </.link>
+    <.link href={~p"/books"}>
+      <.button>Catalogue</.button>
+    </.link>
+    <.link href={~p"/"}>
+      <.button>Home</.button>
+    </.link>
   </:actions>
 </.header>
+<div>
+  To return a book, select the member and then return the book from their page
+</div>
 
 <.table id="members" rows={@members} row_click={&JS.navigate(~p"/members/#{&1}")}>
   <:col :let={member} label="First name"><%= member.first_name %></:col>
@@ -17,7 +26,7 @@
     <.link navigate={~p"/members/#{member}/edit"}>Edit</.link>
   </:action>
   <:action :let={member}>
-    <.link href={~p"/members/#{member}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/members/#{member}"} method="delete">
       Delete
     </.link>
   </:action>

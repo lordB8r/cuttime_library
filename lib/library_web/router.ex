@@ -21,6 +21,8 @@ defmodule LibraryWeb.Router do
     resources "/books", BookController
     resources "/members", MemberController
     post "/members/return/:member_id/:book_id", MemberController, :return
+    get "/members/checkout/:member_id", MemberController, :list_books
+    post "/members/checkout/:member_id/:book_id", MemberController, :checkout
 
     live "/upload_live", UploadLive
     live "/checkout_live", CheckoutLive
