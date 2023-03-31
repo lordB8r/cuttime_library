@@ -1,7 +1,6 @@
 defmodule LibraryWeb.BookController do
   use LibraryWeb, :controller
 
-  alias Library.Utility
   alias Library.Catalogue
   alias Library.Catalogue.Book
 

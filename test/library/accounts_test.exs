@@ -9,7 +9,6 @@ defmodule Library.AccountsTest do
     alias Library.Accounts.Member
 
     import Library.AccountsFixtures
-    import Library.CatalogueFixtures
 
     @invalid_attrs %{first_name: nil, last_name: nil}
 
