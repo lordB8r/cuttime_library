@@ -19,8 +19,9 @@ defmodule LibraryWeb.Router do
 
     get "/", PageController, :home
     resources "/books", BookController
-
+    resources "/members", MemberController
     live "/upload_live", UploadLive
+    live "/checkout_live", CheckoutLive
   end
 
   # Other scopes may use custom stacks.

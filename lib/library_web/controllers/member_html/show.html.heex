@@ -1,0 +1,19 @@
+<.header>
+  Member <%= @member.id %>
+  <:subtitle>This is a member record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/members/#{@member}/edit"}>
+      <.button>Edit member</.button>
+    </.link>
+    <.link href={~p"/checkout_live"}>
+      <.button>Checkout Books</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="First name"><%= @member.first_name %></:item>
+  <:item title="Last name"><%= @member.last_name %></:item>
+</.list>
+
+<.back navigate={~p"/members"}>Back to members</.back>
