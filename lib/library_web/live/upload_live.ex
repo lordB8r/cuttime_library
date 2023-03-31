@@ -1,15 +1,11 @@
 defmodule LibraryWeb.UploadLive do
   use LibraryWeb, :live_view
 
-  # alias Library.Catalogue
-  # alias Library.Catalogue.Book
-  alias Library.Utility
-
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:uploaded_files, %{})
+     |> assign(:uploaded_files, %{passed: [], failed: []})
      |> allow_upload(:csv, accept: ~w(.csv), max_entries: 1)}
   end
 
@@ -25,33 +21,22 @@ defmodule LibraryWeb.UploadLive do
 
   @impl Phoenix.LiveView
   def handle_event("save", _params, socket) do
-    uploaded_files =
+    file_path =
       consume_uploaded_entries(
         socket,
         :csv,
-        fn %{path: path}, entry ->
-          Path.basename(path) |> IO.inspect(label: "basename:: upload_live.ex:35")
-          :code.priv_dir(:library) |> IO.inspect(label: "upload_live.ex:36")
-          entry |> IO.inspect(label: "upload_live.ex:37")
+        fn %{path: path}, _entry ->
+          filename = Path.basename(path) <> ".csv"
+          dest = Path.join("priv/static/uploads", filename)
 
-          dest =
-            Path.join([
-              :code.priv_dir(:library),
-              "static",
-              "uploads",
-              Path.basename(path)
-            ]) <> ".csv"
-
-          dest |> IO.inspect(label: "upload_live.ex:45")
           File.cp!(path, dest)
-
-          {:ok, file_path: dest}
+          {:ok, filename}
         end
       )
 
-    {:noreply,
-     socket
-     |> push_redirect(to: ~p"/books-import"), :import_books, &(&1 ++ uploaded_files)}
+    uploaded = Library.Utility.decode_csv(file_path, "import")
+
+    {:noreply, assign(socket, %{uploaded_files: uploaded})}
   end
 
   defp error_to_string(:too_large), do: "Too large"

@@ -49,7 +49,7 @@ defmodule Library.Utility do
     }]
   """
   def decode_csv(filename, type) when type == "import" do
-    Path.join([Application.app_dir(:library), "priv", "imports", filename])
+    Path.join([Application.app_dir(:library), "priv", "static", "uploads", filename])
     |> process_csv()
   end
 

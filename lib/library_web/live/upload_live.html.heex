@@ -1,4 +1,17 @@
-<h2>Upload your book inventory list here!</h2>
+<.header>
+  Upload your book inventory list here!
+  <:actions>
+    <.link href={~p"/books/new"}>
+      <.button>New Book</.button>
+    </.link>
+    <.link href={~p"/books"}>
+      <.button>Book List</.button>
+    </.link>
+    <.link href={~p"/"}>
+      <.button>Home</.button>
+    </.link>
+  </:actions>
+</.header>
 <.form for={@uploaded_files} phx-change="validate" phx-submit="save">
   <div class="container" phx-drop-target={@uploads.csv.ref}>
     <.live_file_input upload={@uploads.csv} />
@@ -8,5 +21,26 @@
         <%= error_to_string(error) %>
       </div>
     <% end %>
+  </div>
+  <div>
+    <div>
+      <h2>Imported Books</h2>
+      <.table id="passed" rows={@uploaded_files.passed}>
+        <:col :let={book} label="Title"><%= book.title %></:col>
+      </.table>
+    </div>
+    <div>
+      <h2>Books that failed</h2>
+      <.table id="failed" rows={@uploaded_files.failed}>
+        <:col :let={book} label="Changes">
+          <%= Enum.map(book.changes, fn {k, v} -> "#{k} :: " <> to_string(v) end) %>
+        </:col>
+        <:col :let={book} label="Errors">
+          <%= Enum.map(book.errors, fn {key, {error_message, _keys}} ->
+            "#{key} - " <> error_message
+          end) %>
+        </:col>
+      </.table>
+    </div>
   </div>
 </.form>
